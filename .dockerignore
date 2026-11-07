@@ -1,0 +1,7 @@
+**/node_modules
+**/dist
+**/.git
+**/uploads
+**/*.md
+!client/package-lock.json
+!server/package-lock.json

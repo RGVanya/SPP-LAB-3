@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: tasks
+      POSTGRES_PASSWORD: tasks
+      POSTGRES_DB: tasks
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tasks -d tasks"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+
+  # Почтовый сервер для разработки: SMTP на 1025, веб-интерфейс ящика на http://localhost:8025
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"
+
+  api:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgres://tasks:tasks@db:5432/tasks
+      UPLOADS_DIR: /app/uploads
+      CLIENT_DIST: /app/public
+      MAX_UPLOAD_BYTES: 10485760
+      LOG_LEVEL: info
+      APP_URL: http://localhost:3000
+      # В продакшене — длинная случайная строка из секрет-хранилища.
+      JWT_SECRET: change-me-in-production-0c5f1e9a7b
+      ACCESS_TOKEN_TTL: 900
+      REFRESH_TOKEN_TTL: 604800
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      MAIL_FROM: "Менеджер задач <no-reply@tasks.local>"
+      ADMIN_EMAIL: admin@example.com
+      ADMIN_PASSWORD: Passw0rd!
+      ADMIN_NAME: Администратор
+      DEMO_USERS_PASSWORD: Passw0rd!
+    ports:
+      - "3000:3000"
+    volumes:
+      - uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
+volumes:
+  pgdata:
+  uploads:
