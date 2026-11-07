@@ -7,3 +7,33 @@ uploads/
 # Пояснения к лабораторной: в репозиторий не входят
 пояснения/
 README.md
+
+# Инструменты и артефакты разработки с помощью ИИ — только на локальной машине
+.claude/
+.cursor/
+.serena/
+.specify/
+.agent/
+.agents/
+.windsurf/
+.continue/
+.aider/
+.aider*
+.copilot/
+.gemini/
+.codex/
+.opencode/
+.kiro/
+.amazonq/
+.roo/
+.cline/
+.github/copilot-instructions.md
+.github/instructions/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.cursorrules
+.cursorignore
+
+# Спецификации Spec Kit не являются частью приложения
+specs/
